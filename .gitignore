@@ -1,0 +1,7 @@
+venv
+static/dist
+static/uploads/*
+static/results/*
+
+
+.DS_Store
