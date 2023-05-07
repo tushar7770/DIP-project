@@ -38,7 +38,7 @@ psutil==5.9.4
 
 scipy==1.10.1
 SQLAlchemy==1.4.0
-tailwindcss==2.2.7
+tailwind.config.js
 virtualenv==20.21.0
 wcwidth==0.2.6
 Werkzeug==2.2.3
