@@ -36,7 +36,7 @@ opencv-python-headless==4.7.0.72
 psutil==5.9.4
 
 
-
+scipy==1.10.1
 SQLAlchemy==1.4.0
 
 virtualenv==20.21.0
