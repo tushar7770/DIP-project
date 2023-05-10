@@ -24,8 +24,9 @@ def allowed_file(filename):
 def processImage(filename, operation, *args):
     print(f"Processing {filename} with {operation}")
     print(args)
-    img = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    newFilename = os.path.join(app.config['RESULT_FOLDER'], filename)
+    img=cv2.imread(filename)
+    # img = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # newFilename = os.path.join(app.config['RESULT_FOLDER'], filename)
     match operation:
         case "grayc":
             resultImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -58,8 +59,8 @@ def processImage(filename, operation, *args):
             resultImg = image_ops.remove_salt_and_pepper_noise(img, eval(args[0]))
             # resultImg = image_ops.remove_salt_and_pepper_noise(img, 5)
     
-    cv2.imwrite(newFilename, resultImg)
-    return newFilename
+    # cv2.imwrite(newFilename, resultImg)
+    return resultImg
 
 # def gen_frames(val):  # generate frame by frame from camera
 #         while True:
@@ -100,8 +101,8 @@ def edit():
             return "Error file not selected"
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            uploadFilename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(uploadFilename)
+            # uploadFilename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # file.save(uploadFilename)
             if operation == "rotate":
                 angle = request.form['rotate_angle']
                 newFilename = processImage(filename, operation, angle)
@@ -128,7 +129,7 @@ def edit():
             else:
                 newFilename = processImage(filename, operation)
 
-            return render_template("index.html", result_image=newFilename, image=uploadFilename)
+            return render_template("index.html", result_image=newFilename, image=filename)
         
 
 
