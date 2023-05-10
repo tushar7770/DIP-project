@@ -15,7 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESULT_FOLDER'] = RESULT_FOLDER
 app.config['SECRET_KEY'] = 'super secret key'
 
-camera = cv2.VideoCapture(0)
+# camera = cv2.VideoCapture(0)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -61,28 +61,28 @@ def processImage(filename, operation, *args):
     cv2.imwrite(newFilename, resultImg)
     return newFilename
 
-def gen_frames(val):  # generate frame by frame from camera
-        while True:
-            # Capture frame-by-frame
-            success, frame = camera.read()
-            if not success:
-                break
-            else:
-                if val!=0:
-                    frame = face_filters.face_filter(frame, val)
-                ret, buffer = cv2.imencode('.jpg', frame)
-                frame = buffer.tobytes()
-                yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+# def gen_frames(val):  # generate frame by frame from camera
+#         while True:
+#             # Capture frame-by-frame
+#             success, frame = camera.read()
+#             if not success:
+#                 break
+#             else:
+#                 if val!=0:
+#                     frame = face_filters.face_filter(frame, val)
+#                 ret, buffer = cv2.imencode('.jpg', frame)
+#                 frame = buffer.tobytes()
+#                 yield (b'--frame\r\n'
+#                     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 @app.route('/')
 def home():
     return render_template("index.html")
 
-@app.route('/filters')
-def filters():
-    return render_template("webcam.html")
+# @app.route('/filters')
+# def filters():
+#     return render_template("webcam.html")
 
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -132,18 +132,18 @@ def edit():
         
 
 
-@app.route('/video_feed', methods = ['POST', 'GET'])
-def video_feed():
-    val = 0
-    if request.method == 'POST':
-        if request.form['img'] == 'Dog':
-            val = 1
-        if request.form['img'] == 'Neon':
-            val = 2
-        if request.form['img'] == 'Witch':
-            val = 3
-    return Response(gen_frames(val),mimetype='multipart/x-mixed-replace; boundary=frame')
+# @app.route('/video_feed', methods = ['POST', 'GET'])
+# def video_feed():
+#     val = 0
+#     if request.method == 'POST':
+#         if request.form['img'] == 'Dog':
+#             val = 1
+#         if request.form['img'] == 'Neon':
+#             val = 2
+#         if request.form['img'] == 'Witch':
+#             val = 3
+#     return Response(gen_frames(val),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0',port=8080)
