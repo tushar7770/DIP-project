@@ -1,0 +1,9 @@
+{
+    "name": "tailwindcss",
+    "version": "3.3.2",
+    "description": "",
+    "main": "tailwind.config.js",
+    "scripts": {
+        "tailwind": "npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css "
+    }
+}
