@@ -5,6 +5,10 @@ import os
 import cv2
 import image_ops
 import face_filters
+import numpy as np
+from io import BytesIO
+import base64
+
 
 UPLOAD_FOLDER = 'static/uploads'
 RESULT_FOLDER = 'static/results'
@@ -24,7 +28,9 @@ def allowed_file(filename):
 def processImage(filename, operation, *args):
     print(f"Processing {filename} with {operation}")
     print(args)
-    img=cv2.imread(filename)
+    
+    img = filename
+    # img=cv2.imread(filename)
     # img = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     # newFilename = os.path.join(app.config['RESULT_FOLDER'], filename)
     match operation:
@@ -59,8 +65,11 @@ def processImage(filename, operation, *args):
             resultImg = image_ops.remove_salt_and_pepper_noise(img, eval(args[0]))
             # resultImg = image_ops.remove_salt_and_pepper_noise(img, 5)
     
+     # Encode the processed image to base64 string
+    _, processed_img_data = cv2.imencode('.png', resultImg)
+    processed_img_str = base64.b64encode(processed_img_data).decode('utf-8')
     # cv2.imwrite(newFilename, resultImg)
-    return resultImg
+    return processed_img_str
 
 # def gen_frames(val):  # generate frame by frame from camera
 #         while True:
@@ -100,7 +109,14 @@ def edit():
             flash('No selected file')
             return "Error file not selected"
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            
+            image_data = BytesIO(file.read())
+
+            # Convert the image data into a numpy array
+            arr = np.frombuffer(image_data.getvalue(), np.uint8)
+
+            # Decode the numpy array into an OpenCV image
+            filename = cv2.imdecode(arr, cv2.IMREAD_COLOR)
             # uploadFilename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             # file.save(uploadFilename)
             if operation == "rotate":
@@ -128,6 +144,9 @@ def edit():
                 newFilename = processImage(filename, operation, kernel_size)
             else:
                 newFilename = processImage(filename, operation)
+
+            _, processed_img_data = cv2.imencode('.png', filename)
+            filename = base64.b64encode(processed_img_data).decode('utf-8')
 
             return render_template("index.html", result_image=newFilename, image=filename)
         

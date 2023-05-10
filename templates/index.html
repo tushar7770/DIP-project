@@ -100,7 +100,7 @@
                     <p class="mt-6 text-lg leading-8 text-gray-600">This is the place where you can perform all Image
                         Processing functions.</p>
                 </div>
-            </div> -->
+            </div>
 
 
             <div class="mx-auto mt-10 max-w-6xl">
@@ -174,16 +174,18 @@
 
                 <div class="flex gap-5 mt-10">
                     <div class="border rounded-xl w-full min-h-[400px]">
-                        {% if image %}
-                        <img src="{{image}}" alt="" class="w-full h-full object-cover rounded-lg">
+                        {% if image is defined and image|length > 0 %}
+                        <img src="data:image/png;base64,{{ image }}" alt=""
+                            class="w-full h-full object-cover rounded-lg">
                         {% else %}
                         <img id="uploaded" alt="" class="w-full h-full object-cover rounded-lg">
                         {% endif %}
                     </div>
                     <div class="relative group border rounded-xl w-full min-h-[400px]">
-                        {% if result_image %}
-                        <img src="{{result_image}}" alt="" class="w-full h-full object-cover rounded-lg">
-                        <a href="{{result_image}}"
+                        {% if image is defined and image|length > 0 %}
+                        <img src="data:image/png;base64,{{result_image}}" alt=""
+                            class="w-full h-full object-cover rounded-lg">
+                        <a href="data:image/png;base64,{{result_image}}" download
                             class="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out bottom-7 left-[50%] -translate-x-[50%] py-2 px-4 text-sm bg-indigo-600 text-white rounded-full">Download</a>
                         {% endif %}
                     </div>
